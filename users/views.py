@@ -12,6 +12,7 @@ from users.serializers import UserSerializer, AuthTokenSerializer
 
 
 class UserViewSet(viewsets.ViewSet):
+    authentication_classes = (TokenAuthentication, )
 
     @staticmethod
     def list(request):

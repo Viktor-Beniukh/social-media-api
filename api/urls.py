@@ -11,6 +11,7 @@ from users.views import (
     ManageUserView,
     UserLogoutView
 )
+from votes.views import VoteViewSet
 
 app_name = "api"
 
@@ -19,6 +20,7 @@ router.register("users", UserViewSet, basename="users")
 router.register("profiles", ProfileViewSet, basename="profiles")
 router.register("posts", PostViewSet, basename="posts")
 router.register("comments", CommentViewSet, basename="comments")
+router.register("votes", VoteViewSet, basename="votes")
 
 urlpatterns = [
     path("users/register/", CreateUserView.as_view(), name="create"),
