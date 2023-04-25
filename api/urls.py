@@ -1,6 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 
+from comments.views import CommentViewSet
 from posts.views import PostViewSet
 from user_profile.views import ProfileViewSet
 from users.views import (
@@ -17,6 +18,7 @@ router = routers.DefaultRouter()
 router.register("users", UserViewSet, basename="users")
 router.register("profiles", ProfileViewSet, basename="profiles")
 router.register("posts", PostViewSet, basename="posts")
+router.register("comments", CommentViewSet, basename="comments")
 
 urlpatterns = [
     path("users/register/", CreateUserView.as_view(), name="create"),

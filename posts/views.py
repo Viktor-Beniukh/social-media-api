@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from posts.models import Post
@@ -13,6 +14,7 @@ from posts.permissions import IsAuthorOrReadOnly
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.prefetch_related("hashtags")
     serializer_class = PostSerializer
+    authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
 
     def get_serializer_class(self):

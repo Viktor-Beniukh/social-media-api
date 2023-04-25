@@ -12,6 +12,7 @@ from users.serializers import UserSerializer, AuthTokenSerializer
 
 
 class UserViewSet(viewsets.ViewSet):
+
     @staticmethod
     def list(request):
         queryset = User.objects.all()
