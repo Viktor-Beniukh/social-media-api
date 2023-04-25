@@ -12,7 +12,11 @@ from posts.permissions import IsAuthorOrReadOnly
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.prefetch_related("hashtags")
+    queryset = (
+        Post.objects
+        .select_related("author")
+        .prefetch_related("hashtags")
+    )
     serializer_class = PostSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)

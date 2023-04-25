@@ -8,7 +8,7 @@ from user_profile.serializers import ProfileSerializer
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
+    queryset = UserProfile.objects.select_related("owner")
     serializer_class = ProfileSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)

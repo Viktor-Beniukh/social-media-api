@@ -10,7 +10,9 @@ from votes.serializers import VoteSerializer
 
 
 class VoteViewSet(viewsets.ModelViewSet):
-    queryset = Vote.objects.all()
+    queryset = Vote.objects.select_related(
+        "post", "up_vote_by", "down_vote_by"
+    )
     serializer_class = VoteSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly, HasSelfVotedOrReadOnly, )

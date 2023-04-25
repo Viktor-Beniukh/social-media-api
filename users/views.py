@@ -16,13 +16,13 @@ class UserViewSet(viewsets.ViewSet):
 
     @staticmethod
     def list(request):
-        queryset = User.objects.all()
+        queryset = User.objects.select_related("profile_data")
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
 
     @staticmethod
     def retrieve(request, pk):
-        queryset = User.objects.all()
+        queryset = User.objects.select_related("profile_data")
         user = get_object_or_404(queryset, pk=pk)
         serializer = UserSerializer(user)
         return Response(serializer.data)
