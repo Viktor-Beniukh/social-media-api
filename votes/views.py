@@ -22,15 +22,23 @@ class VoteViewSet(viewsets.ModelViewSet):
                 post=post_instance, up_vote_by=self.request.user
             ).exists()
             if already_up_voted:
-                raise serializers.ValidationError({"message": "You have already liked this post"})
+                raise serializers.ValidationError(
+                    {"message": "You have already liked this post"}
+                )
             else:
-                serializer.save(up_vote_by=self.request.user, post=post_instance)
+                serializer.save(
+                    up_vote_by=self.request.user, post=post_instance
+                )
 
         else:
             already_down_voted = Vote.objects.filter(
                 post=post_instance, down_vote_by=self.request.user
             ).exists()
             if already_down_voted:
-                raise serializers.ValidationError({"message": "You have already disliked this post"})
+                raise serializers.ValidationError(
+                    {"message": "You have already disliked this post"}
+                )
             else:
-                serializer.save(down_vote_by=self.request.user, post=post_instance)
+                serializer.save(
+                    down_vote_by=self.request.user, post=post_instance
+                )
