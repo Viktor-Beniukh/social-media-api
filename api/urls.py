@@ -1,6 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 
+from user_profile.views import ProfileViewSet
 from users.views import (
     UserViewSet,
     CreateUserView,
@@ -13,6 +14,7 @@ app_name = "api"
 
 router = routers.DefaultRouter()
 router.register("users", UserViewSet, basename="users")
+router.register("profiles", ProfileViewSet, basename="profiles")
 
 urlpatterns = [
     path("users/register/", CreateUserView.as_view(), name="create"),

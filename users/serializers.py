@@ -2,8 +2,12 @@ from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 
+from user_profile.serializers import ProfileSerializer
+
 
 class UserSerializer(serializers.ModelSerializer):
+    profile_data = ProfileSerializer(read_only=True)
+
     class Meta:
         model = get_user_model()
         fields = (
@@ -14,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "is_staff",
+            "profile_data",
         )
         read_only_fields = ("is_staff",)
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
