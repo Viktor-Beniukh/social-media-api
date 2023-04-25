@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "users",
     "user_profile",
     "posts",
+    "comments",
     "api",
 ]
 
