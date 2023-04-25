@@ -32,4 +32,6 @@ class UserProfile(models.Model):
     works_at = models.CharField(max_length=255, blank=True)
     studies_at = models.CharField(max_length=255, blank=True)
     lives_in = models.CharField(max_length=255, blank=True)
-    profile_image = models.ImageField(upload_to=profile_image_file_path, blank=True)
+    profile_image = models.ImageField(
+        upload_to=profile_image_file_path, blank=True
+    )
