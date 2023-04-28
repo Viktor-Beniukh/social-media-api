@@ -9,11 +9,13 @@ from users.views import (
     CreateUserView,
     CreateTokenView,
     ManageUserView,
-    UserLogoutView
+    UserLogoutView,
 )
 from votes.views import VoteViewSet
 
+
 app_name = "api"
+
 
 router = routers.DefaultRouter()
 router.register("users", UserViewSet, basename="users")
@@ -26,7 +28,7 @@ urlpatterns = [
     path("users/register/", CreateUserView.as_view(), name="create"),
     path("users/token/", CreateTokenView.as_view(), name="token"),
     path("users/me/", ManageUserView.as_view(), name="manage"),
-    path("users/logout/", UserLogoutView.as_view(), name="logout")
+    path("users/logout/", UserLogoutView.as_view(), name="logout"),
 ]
 
 urlpatterns += router.urls

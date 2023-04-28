@@ -65,6 +65,7 @@ class Relationship(models.Model):
 
     class Meta:
         unique_together = ("user", "follower")
+        ordering = ("-created_at",)
 
     def __str__(self):
-        return f"{self.follower} is following {self.user}"
+        return f"{self.user} is following {self.follower}"
