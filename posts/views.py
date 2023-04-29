@@ -21,6 +21,15 @@ class PostViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
 
+    def get_queryset(self):
+        hashtags = self.request.query_params.get("hashtags")
+        queryset = self.queryset
+
+        if hashtags:
+            queryset = queryset.filter(hashtags__name__in=hashtags)
+
+        return queryset
+
     def get_serializer_class(self):
         if self.action == "create":
             return CreatePostSerializer

@@ -26,6 +26,15 @@ class UserViewSet(
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated, )
 
+    def get_queryset(self):
+        username = self.request.query_params.get("username")
+        queryset = self.queryset
+
+        if username:
+            queryset = queryset.filter(username=username)
+
+        return queryset
+
     def get_serializer_class(self):
         if self.action == "retrieve":
             return UserDetailSerializer
