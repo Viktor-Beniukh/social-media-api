@@ -33,8 +33,10 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "create":
             return CreatePostSerializer
+
         if self.action == "update":
             return UpdatePostSerializer
+
         return self.serializer_class
 
     def perform_create(self, serializer):
