@@ -10,6 +10,7 @@ from rest_framework.settings import api_settings
 from users.models import User, Relationship
 from users.serializers import (
     UserSerializer,
+    UserDetailSerializer,
     AuthTokenSerializer,
     RelationshipSerializer,
 )
@@ -26,6 +27,9 @@ class UserViewSet(
     permission_classes = (IsAuthenticated, )
 
     def get_serializer_class(self):
+        if self.action == "retrieve":
+            return UserDetailSerializer
+
         if self.action in ("follow", "unfollow"):
             return RelationshipSerializer
 

@@ -27,6 +27,19 @@ class FollowingSerializer(serializers.ModelSerializer):
         fields = ("follower", )
 
 
+class FollowingDetailSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField(
+        format="%Y-%m-%d %H:%M:%S", read_only=True
+    )
+    follower_username = serializers.CharField(
+        source="follower.username", read_only=True
+    )
+
+    class Meta:
+        model = Relationship
+        fields = ("id", "follower", "follower_username", "created_at")
+
+
 class FollowersSerializer(serializers.ModelSerializer):
     user = serializers.CharField(
         source="user.username", read_only=True
@@ -37,10 +50,23 @@ class FollowersSerializer(serializers.ModelSerializer):
         fields = ("user", )
 
 
+class FollowersDetailSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField(
+        format="%Y-%m-%d %H:%M:%S", read_only=True
+    )
+    user_username = serializers.CharField(
+        source="user.username", read_only=True
+    )
+
+    class Meta:
+        model = Relationship
+        fields = ("id", "user", "user_username", "created_at")
+
+
 class UserSerializer(serializers.ModelSerializer):
     profile_data = ProfileSerializer(read_only=True)
-    following = serializers.SerializerMethodField()
-    followers = serializers.SerializerMethodField()
+    following = FollowingSerializer(read_only=True, many=True)
+    followers = FollowersSerializer(read_only=True, many=True)
 
     class Meta:
         model = get_user_model()
@@ -73,13 +99,10 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
-    @staticmethod
-    def get_following(obj):
-        return FollowingSerializer(obj.following.all(), many=True).data
 
-    @staticmethod
-    def get_followers(obj):
-        return FollowersSerializer(obj.followers.all(), many=True).data
+class UserDetailSerializer(UserSerializer):
+    following = FollowingDetailSerializer(many=True, read_only=True)
+    followers = FollowersDetailSerializer(many=True, read_only=True)
 
 
 class AuthTokenSerializer(serializers.Serializer):
