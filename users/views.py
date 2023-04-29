@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 
+from api.views import ApiPagination
 from users.models import User, Relationship
 from users.serializers import (
     UserSerializer,
@@ -25,6 +26,7 @@ class UserViewSet(
     serializer_class = UserSerializer
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated, )
+    pagination_class = ApiPagination
 
     def get_queryset(self):
         username = self.request.query_params.get("username")

@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from rest_framework.pagination import PageNumberPagination
 
-# Create your views here.
+
+class ApiPagination(PageNumberPagination):
+    page_size = 10
+    max_page_size = 100

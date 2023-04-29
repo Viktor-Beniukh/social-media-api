@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
+from api.views import ApiPagination
 from posts.models import Post
 from posts.serializers import (
     PostSerializer,
@@ -20,6 +21,7 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
+    pagination_class = ApiPagination
 
     def get_queryset(self):
         hashtags = self.request.query_params.get("hashtags")
