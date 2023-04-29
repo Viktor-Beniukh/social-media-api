@@ -1,4 +1,5 @@
 from django.contrib.auth import logout
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins, status, generics, views
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -33,7 +34,7 @@ class UserViewSet(
         queryset = self.queryset
 
         if username:
-            queryset = queryset.filter(username=username)
+            queryset = queryset.filter(username__icontains=username)
 
         return queryset
 
@@ -81,6 +82,20 @@ class UserViewSet(
 
         relationship.delete()
         return Response(status=status.HTTP_200_OK)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="username",
+                type=str,
+                description=(
+                    "Filter by username (ex. ?username=Admin)"
+                )
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class CreateUserView(generics.CreateAPIView):

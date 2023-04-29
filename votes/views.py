@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, serializers
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -19,7 +20,19 @@ class VoteViewSet(viewsets.ModelViewSet):
     )
     serializer_class = VoteSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticatedOrReadOnly, HasSelfVotedOrReadOnly,)
+    permission_classes = (
+        IsAuthenticatedOrReadOnly,
+        HasSelfVotedOrReadOnly,
+    )
+
+    def get_queryset(self):
+        post_id_str = self.request.query_params.get("post")
+        queryset = self.queryset
+
+        if post_id_str:
+            queryset = queryset.filter(post_id=int(post_id_str))
+
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -63,3 +76,17 @@ class VoteViewSet(viewsets.ModelViewSet):
                 serializer.save(
                     down_vote_by=self.request.user, post=post_instance
                 )
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="post",
+                type=int,
+                description=(
+                    "Filter by post id (ex. ?post_id=1)"
+                ),
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
