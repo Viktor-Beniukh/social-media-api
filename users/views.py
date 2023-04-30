@@ -2,7 +2,10 @@ from django.contrib.auth import logout
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins, status, generics, views
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly
+)
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -26,7 +29,7 @@ class UserViewSet(
     queryset = User.objects.select_related("profile_data")
     serializer_class = UserSerializer
     authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticatedOrReadOnly, )
     pagination_class = ApiPagination
 
     def get_queryset(self):
