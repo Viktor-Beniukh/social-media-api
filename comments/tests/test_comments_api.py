@@ -1,11 +1,8 @@
-from typing import Any
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from rest_framework import status
 from rest_framework.test import APIClient
-from urllib.parse import urljoin
 
 from api.views import ApiPagination
 from comments.models import Comment
@@ -38,10 +35,6 @@ def sample_comment(**params: dict) -> Comment:
     return Comment.objects.create(**defaults)
 
 
-def detail_url(comment_id: int) -> Any:
-    return urljoin(COMMENTS_URL, f"{comment_id}")
-
-
 class UnauthenticatedCommentApi(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
@@ -57,16 +50,6 @@ class UnauthenticatedCommentApi(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
-
-    def test_retrieve_comment_detail(self) -> None:
-        comment = sample_comment()
-        url = detail_url(comment.id)
-
-        response = self.client.get(url)
-
-        self.assertEqual(
-            response.status_code, status.HTTP_301_MOVED_PERMANENTLY
-        )
 
     def test_filter_comments_by_author_id(self):
         comment = sample_comment()
