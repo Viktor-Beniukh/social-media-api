@@ -26,9 +26,10 @@ router.register("votes", VoteViewSet, basename="votes")
 
 
 urlpatterns = [
-    path("", include(router.urls)),
     path("users/register/", CreateUserView.as_view(), name="create"),
     path("users/token/", CreateTokenView.as_view(), name="token"),
     path("users/me/", ManageUserView.as_view(), name="manage"),
     path("users/logout/", UserLogoutView.as_view(), name="logout"),
 ]
+
+urlpatterns += router.urls
