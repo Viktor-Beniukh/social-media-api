@@ -32,3 +32,9 @@ class Comment(models.Model):
     comment_image = models.ImageField(
         upload_to=comment_image_file_path, blank=True
     )
+
+    class Meta:
+        ordering = ("-comment_date", )
+
+    def __str__(self):
+        return self.comment_content
