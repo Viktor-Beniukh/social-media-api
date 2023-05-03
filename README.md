@@ -27,7 +27,8 @@ You need to create `.env` file and add there the variables with your according v
 - `POSTGRES_HOST`: this is host name for databases;
 - `POSTGRES_PORT`: this is port for databases;
 - `SECRET_KEY`: this is Django Secret Key - by default is set automatically when you create a Django project.
-                You can generate a new key, if you want, by following the link: `https://djecrety.ir`.
+                You can generate a new key, if you want, by following the link: `https://djecrety.ir`;
+- `CELERY_BROKER_URL` & `CELERY_RESULT_BACKEND`: they're used to create periodic tasks. Have to install Celery & Redis;
 
   
 ## Run with docker
