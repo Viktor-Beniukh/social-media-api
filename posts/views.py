@@ -1,10 +1,13 @@
+from django.utils import timezone
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, generics
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import action
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
     IsAuthenticated
 )
+from rest_framework.response import Response
 
 from api.views import ApiPagination
 from posts.models import Post
@@ -14,6 +17,7 @@ from posts.serializers import (
     UpdatePostSerializer, CreateHashtagSerializer
 )
 from posts.permissions import IsAuthorOrReadOnly
+from posts.tasks import create_post
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -51,6 +55,28 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    @action(methods=["POST"], detail=False)
+    def schedule_post(self, request):
+        author_id = request.data["author_id"]
+        content = request.data["content"]
+        created_at = request.data["created_at"]
+        post_image = request.data.get("post_image", None)
+        hashtags = request.data.get("hashtags", None)
+
+        scheduled_time = timezone.now()
+
+        create_post.apply_async(
+            args=[author_id, content, created_at, post_image, hashtags],
+            eta=scheduled_time
+        )
+
+        return Response(
+            {
+                "scheduled_time": scheduled_time,
+                "message": "Post scheduled Successfully"
+            }
+        )
 
     @extend_schema(
         parameters=[
