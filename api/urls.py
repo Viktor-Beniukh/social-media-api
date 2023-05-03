@@ -1,8 +1,8 @@
-from django.urls import path, include
+from django.urls import path
 from rest_framework import routers
 
 from comments.views import CommentViewSet
-from posts.views import PostViewSet
+from posts.views import PostViewSet, CreateHashtagView
 from user_profile.views import ProfileViewSet
 from users.views import (
     UserViewSet,
@@ -30,6 +30,11 @@ urlpatterns = [
     path("users/token/", CreateTokenView.as_view(), name="token"),
     path("users/me/", ManageUserView.as_view(), name="manage"),
     path("users/logout/", UserLogoutView.as_view(), name="logout"),
+    path(
+        "posts/hashtags/",
+        CreateHashtagView.as_view(),
+        name="hashtag-create"
+    ),
 ]
 
 urlpatterns += router.urls

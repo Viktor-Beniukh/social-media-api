@@ -10,6 +10,7 @@ from posts.serializers import PostSerializer
 
 
 POST_URL = "http://127.0.0.1:8000/posts/"
+HASHTAG_URL = "http://127.0.0.1:8000/posts/hashtags/"
 
 
 def sample_post(**params: dict) -> Post:
@@ -122,3 +123,29 @@ class AuthenticatedPostApiTests(TestCase):
 
         for key in payload:
             self.assertEqual(payload[key], getattr(post, key))
+
+
+class AuthenticatedHashtagsApiTests(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(
+            email="author@test.com",
+            password="authortestpassword",
+            username="AuthorTest"
+        )
+        self.client.force_authenticate(self.user)
+
+    def test_create_post(self) -> None:
+
+        payload = {
+            "name": "#Python"
+        }
+
+        response = self.client.post(HASHTAG_URL, payload)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        hashtag = Hashtag.objects.get(name=response.data["name"])
+
+        for key in payload:
+            self.assertEqual(payload[key], getattr(hashtag, key))

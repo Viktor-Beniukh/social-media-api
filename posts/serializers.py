@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from comments.serializers import CommentSerializer
-from posts.models import Post
+from posts.models import Post, Hashtag
 from votes.serializers import VoteListSerializer
 
 
@@ -28,10 +28,23 @@ class PostSerializer(serializers.ModelSerializer):
 class CreatePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        exclude = ("author", "created_at", "hashtags")
+        exclude = ("author", "created_at")
 
 
 class UpdatePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        exclude = ("id", "author", "created_at", "hashtags")
+        exclude = ("id", "author", "created_at")
+
+
+class CreateHashtagSerializer(serializers.Serializer):
+    name = serializers.CharField()
+
+    def create(self, validated_data):
+        return Hashtag.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get("name", instance.name)
+        instance.save()
+
+        return instance

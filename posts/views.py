@@ -1,14 +1,17 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly,
+    IsAuthenticated
+)
 
 from api.views import ApiPagination
 from posts.models import Post
 from posts.serializers import (
     PostSerializer,
     CreatePostSerializer,
-    UpdatePostSerializer
+    UpdatePostSerializer, CreateHashtagSerializer
 )
 from posts.permissions import IsAuthorOrReadOnly
 
@@ -69,3 +72,9 @@ class PostViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class CreateHashtagView(generics.CreateAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CreateHashtagSerializer
