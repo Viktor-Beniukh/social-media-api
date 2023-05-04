@@ -4,7 +4,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from api.views import ApiPagination
+from api.pagination import ApiPagination
 from comments.models import Comment
 from comments.serializers import CommentSerializer
 from posts.models import Post

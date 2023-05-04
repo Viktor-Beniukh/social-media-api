@@ -9,7 +9,7 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 
-from api.views import ApiPagination
+from api.pagination import ApiPagination
 from posts.models import Post
 from posts.serializers import (
     PostSerializer,

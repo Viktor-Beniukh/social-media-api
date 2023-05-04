@@ -4,7 +4,7 @@ from rest_framework import status
 
 from rest_framework.test import APIClient
 
-from api.views import ApiPagination
+from api.pagination import ApiPagination
 from posts.models import Post
 from votes.models import Vote
 from votes.serializers import VoteListSerializer

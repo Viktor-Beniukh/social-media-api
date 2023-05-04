@@ -3,7 +3,7 @@ from rest_framework import status
 
 from rest_framework.test import APIClient
 
-from api.views import ApiPagination
+from api.pagination import ApiPagination
 from users.models import User
 from users.serializers import UserSerializer
 
