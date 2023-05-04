@@ -17,7 +17,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         author_id_str = self.request.query_params.get("author")
         post_id_str = self.request.query_params.get("post")
-        queryset = self.queryset
+        queryset = super().get_queryset()
 
         if author_id_str:
             queryset = queryset.filter(author_id=int(author_id_str))

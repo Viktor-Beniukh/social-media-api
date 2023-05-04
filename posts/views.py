@@ -34,7 +34,7 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         author_id_str = self.request.query_params.get("author")
         hashtags = self.request.query_params.get("hashtags")
-        queryset = self.queryset
+        queryset = super().get_queryset()
 
         if author_id_str:
             queryset = queryset.filter(author_id=author_id_str)
@@ -51,7 +51,7 @@ class PostViewSet(viewsets.ModelViewSet):
         if self.action == "update":
             return UpdatePostSerializer
 
-        return self.serializer_class
+        return super().get_serializer_class()
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

@@ -16,7 +16,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         owner_id_str = self.request.query_params.get("owner")
-        queryset = self.queryset
+        queryset = super().get_queryset()
 
         if owner_id_str:
             queryset = queryset.filter(owner_id=int(owner_id_str))

@@ -34,7 +34,7 @@ class UserViewSet(
 
     def get_queryset(self):
         username = self.request.query_params.get("username")
-        queryset = self.queryset
+        queryset = super().get_queryset()
 
         if username:
             queryset = queryset.filter(username__icontains=username)
@@ -48,7 +48,7 @@ class UserViewSet(
         if self.action in ("follow", "unfollow"):
             return RelationshipSerializer
 
-        return self.serializer_class
+        return super().get_serializer_class()
 
     @action(methods=["POST"], detail=True, url_path="follow")
     def follow(self, request, pk=None):

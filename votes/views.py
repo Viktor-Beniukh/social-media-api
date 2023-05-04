@@ -27,7 +27,7 @@ class VoteViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         post_id_str = self.request.query_params.get("post")
-        queryset = self.queryset
+        queryset = super().get_queryset()
 
         if post_id_str:
             queryset = queryset.filter(post_id=int(post_id_str))
@@ -41,7 +41,7 @@ class VoteViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return VoteDetailSerializer
 
-        return self.serializer_class
+        return super().get_serializer_class()
 
     def perform_create(self, serializer):
         post_instance = get_object_or_404(Post, pk=self.request.data["post"])
