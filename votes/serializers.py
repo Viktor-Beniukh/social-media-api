@@ -5,6 +5,16 @@ from votes.models import Vote
 
 class VoteSerializer(serializers.ModelSerializer):
 
+    def validate(self, attrs):
+        data = super(VoteSerializer, self).validate(attrs=attrs)
+
+        if attrs["post"].author_id == attrs["post"].author.id:
+            raise serializers.ValidationError(
+                {"message": "You can’t evaluate your own posts"}
+            )
+
+        return data
+
     class Meta:
         model = Vote
         fields = ("id", "post", "up_vote_by", "down_vote_by")

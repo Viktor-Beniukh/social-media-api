@@ -46,11 +46,6 @@ class VoteViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         post_instance = get_object_or_404(Post, pk=self.request.data["post"])
 
-        if post_instance.author == self.request.user:
-            raise serializers.ValidationError(
-                {"message": "You can’t evaluate your own posts"}
-            )
-
         if self.request.data["up_vote_by"]:
             already_up_voted = Vote.objects.filter(
                 post=post_instance, up_vote_by=self.request.user
