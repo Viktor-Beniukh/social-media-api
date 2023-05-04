@@ -37,14 +37,7 @@ class UpdatePostSerializer(serializers.ModelSerializer):
         exclude = ("id", "author", "created_at")
 
 
-class CreateHashtagSerializer(serializers.Serializer):
-    name = serializers.CharField()
-
-    def create(self, validated_data):
-        return Hashtag.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get("name", instance.name)
-        instance.save()
-
-        return instance
+class CreateHashtagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hashtag
+        fields = ("id", "name")
