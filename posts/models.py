@@ -18,7 +18,7 @@ def post_image_file_path(instance, filename):
 
 class Hashtag(models.Model):
     name = models.CharField(
-        max_length=255, unique=True, null=True, blank=True, default=None
+        max_length=255, unique=True, blank=True, default=None
     )
 
     def __str__(self):
