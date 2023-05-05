@@ -1,8 +1,7 @@
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.decorators import action
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
     IsAuthenticated
@@ -14,7 +13,8 @@ from posts.models import Post
 from posts.serializers import (
     PostSerializer,
     CreatePostSerializer,
-    UpdatePostSerializer, CreateHashtagSerializer
+    UpdatePostSerializer,
+    CreateHashtagSerializer
 )
 from posts.permissions import IsAuthorOrReadOnly
 from posts.tasks import create_post
@@ -56,26 +56,23 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    @action(methods=["POST"], detail=False)
-    def schedule_post(self, request):
-        author_id = request.data["author_id"]
-        content = request.data["content"]
-        created_at = request.data["created_at"]
-        post_image = request.data.get("post_image", None)
-        hashtags = request.data.get("hashtags", None)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
 
-        scheduled_time = timezone.now()
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(author=self.request.user)
 
-        create_post.apply_async(
-            args=[author_id, content, created_at, post_image, hashtags],
-            eta=scheduled_time
-        )
+            scheduled_at = serializer.validated_data.get("scheduled_at")
+            if scheduled_at and scheduled_at > timezone.now():
+                create_post.apply_async(args=[serializer.validated_data])
+                return Response(
+                    serializer.data, status=status.HTTP_202_ACCEPTED
+                )
+
+        self.perform_create(serializer)
 
         return Response(
-            {
-                "scheduled_time": scheduled_time,
-                "message": "Post scheduled Successfully"
-            }
+            serializer.data, status=status.HTTP_201_CREATED,
         )
 
     @extend_schema(
