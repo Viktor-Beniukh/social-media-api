@@ -36,6 +36,7 @@ class Post(models.Model):
     post_image = models.ImageField(
         upload_to=post_image_file_path, blank=True
     )
+    scheduled_at = models.DateTimeField(blank=True, null=True)
     hashtags = models.ManyToManyField(Hashtag, blank=True)
 
     class Meta:
