@@ -94,6 +94,12 @@ Docker should be installed
 - You can see detailed APIs at swagger page: via /api/doc/swagger/
 
 
+## Testing
+
+- Run tests using different approach: `docker-compose run app sh -c "python manage.py test"`;
+- If needed, also check the flake8: `docker-compose run app sh -c "flake8"`.
+
+
 ## Check project functionality
 
 Superuser credentials for test the functionality of this project:
