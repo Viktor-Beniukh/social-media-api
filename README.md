@@ -13,7 +13,7 @@ Install PostgreSQL and create db
 
 ```shell
 git clone https://github.com/Viktor-Beniukh/social-media-api.git
-cd my-social-media-api
+cd social-media-api
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
