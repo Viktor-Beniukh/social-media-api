@@ -119,7 +119,7 @@ class AuthenticatedPostApiTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        post = Post.objects.get(id=response.data["id"])
+        post = Post.objects.get(content=response.data["content"])
 
         for key in payload:
             self.assertEqual(payload[key], getattr(post, key))
