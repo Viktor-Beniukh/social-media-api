@@ -1,15 +1,17 @@
+from typing import Any
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.urls import reverse
+
 from rest_framework import status
-
 from rest_framework.test import APIClient
-
 
 from user_profile.models import UserProfile
 from user_profile.serializers import ProfileSerializer
 
 
-USERPROFILE_URL = "http://127.0.0.1:8000/profiles/"
+USERPROFILE_URL = reverse("user_profile:profiles-list")
 
 
 def sample_userprofile(**params):
@@ -27,6 +29,10 @@ def sample_userprofile(**params):
     return UserProfile.objects.create(**defaults)
 
 
+def detail_url(owner_id: int) -> Any:
+    return reverse("user_profile:profiles-detail", args=[owner_id])
+
+
 class UnauthenticatedUserProfilesApiTests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
@@ -39,6 +45,17 @@ class UnauthenticatedUserProfilesApiTests(TestCase):
         profiles = UserProfile.objects.all()
 
         serializer = ProfileSerializer(profiles, many=True)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_retrieve_profile_detail(self) -> None:
+        owner = sample_userprofile()
+        url = detail_url(owner.id)
+
+        response = self.client.get(url)
+
+        serializer = ProfileSerializer(owner)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)

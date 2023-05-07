@@ -1,14 +1,17 @@
+from typing import Any
+
 from django.test import TestCase
+from django.urls import reverse
 from rest_framework import status
 
 from rest_framework.test import APIClient
 
-from api.pagination import ApiPagination
+from posts.pagination import ApiPagination
 from users.models import User
 from users.serializers import UserSerializer
 
 
-USERS_URL = "http://127.0.0.1:8000/users/"
+USERS_URL = reverse("users:users-list")
 
 
 class UnauthenticatedUsersApiTests(TestCase):
@@ -28,6 +31,17 @@ class UnauthenticatedUsersApiTests(TestCase):
         if serializer.is_valid():
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(response.data, serializer.data)
+
+    def test_retrieve_user_detail(self) -> None:
+        user = sample_user()
+        url = detail_url(user.id)
+
+        response = self.client.get(url)
+
+        serializer = UserSerializer(user)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
 
     def test_filter_users_by_username(self):
         sample_user(username="AuthorTest")
@@ -53,3 +67,7 @@ def sample_user(**params):
     defaults.update(params)
 
     return User.objects.create(**defaults)
+
+
+def detail_url(user_id: int) -> Any:
+    return reverse("users:users-detail", args=[user_id])

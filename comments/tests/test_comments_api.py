@@ -1,16 +1,19 @@
+from typing import Any
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.urls import reverse
 
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from api.pagination import ApiPagination
+from posts.pagination import ApiPagination
 from comments.models import Comment
 from comments.serializers import CommentSerializer
 from posts.models import Post
 
 
-COMMENTS_URL = "http://127.0.0.1:8000/comments/"
+COMMENTS_URL = reverse("comments:comments-list")
 
 
 def sample_comment(**params: dict) -> Comment:
@@ -35,6 +38,10 @@ def sample_comment(**params: dict) -> Comment:
     return Comment.objects.create(**defaults)
 
 
+def detail_url(comment_id: int) -> Any:
+    return reverse("comments:comments-detail", args=[comment_id])
+
+
 class UnauthenticatedCommentApi(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
@@ -47,6 +54,17 @@ class UnauthenticatedCommentApi(TestCase):
         comments = Comment.objects.all()
 
         serializer = CommentSerializer(comments, many=True)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_retrieve_comment_detail(self) -> None:
+        comment = sample_comment()
+        url = detail_url(comment.id)
+
+        response = self.client.get(url)
+
+        serializer = CommentSerializer(comment)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)

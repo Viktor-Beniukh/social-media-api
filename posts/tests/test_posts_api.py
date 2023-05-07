@@ -1,16 +1,19 @@
+from typing import Any
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.urls import reverse
 
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from api.pagination import ApiPagination
+from posts.pagination import ApiPagination
 from posts.models import Post, Hashtag
 from posts.serializers import PostSerializer
 
 
-POST_URL = "http://127.0.0.1:8000/posts/"
-HASHTAG_URL = "http://127.0.0.1:8000/posts/hashtags/"
+POST_URL = reverse("posts:posts-list")
+HASHTAG_URL = reverse("posts:hashtag-create")
 
 
 def sample_post(**params: dict) -> Post:
@@ -30,6 +33,10 @@ def sample_post(**params: dict) -> Post:
     return Post.objects.create(**defaults)
 
 
+def detail_url(post_id: int) -> Any:
+    return reverse("posts:posts-detail", args=[post_id])
+
+
 class UnauthenticatedPostApi(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
@@ -43,6 +50,19 @@ class UnauthenticatedPostApi(TestCase):
         posts = Post.objects.all()
 
         serializer = PostSerializer(pagination, posts, many=True)
+
+        if serializer.is_valid():
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data, serializer.data)
+
+    def test_retrieve_post_detail(self) -> None:
+        post = sample_post()
+        url = detail_url(post.id)
+        pagination = ApiPagination
+
+        response = self.client.get(url)
+
+        serializer = PostSerializer(pagination, post)
 
         if serializer.is_valid():
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -135,7 +155,7 @@ class AuthenticatedHashtagsApiTests(TestCase):
         )
         self.client.force_authenticate(self.user)
 
-    def test_create_post(self) -> None:
+    def test_create_hashtag(self) -> None:
 
         payload = {
             "name": "#Python"
