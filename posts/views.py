@@ -8,7 +8,7 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 
-from api.pagination import ApiPagination
+from posts.pagination import ApiPagination
 from posts.models import Post
 from posts.serializers import (
     PostSerializer,
@@ -58,16 +58,15 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=self.request.user)
 
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(author=self.request.user)
-
-            scheduled_at = serializer.validated_data.get("scheduled_at")
-            if scheduled_at and scheduled_at > timezone.now():
-                create_post.apply_async(args=[serializer.validated_data])
-                return Response(
-                    serializer.data, status=status.HTTP_202_ACCEPTED
-                )
+        scheduled_at = serializer.validated_data.get("scheduled_at")
+        if scheduled_at and scheduled_at > timezone.now():
+            create_post.apply_async(args=[serializer.validated_data])
+            return Response(
+                serializer.data, status=status.HTTP_202_ACCEPTED
+            )
 
         self.perform_create(serializer)
 

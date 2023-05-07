@@ -22,7 +22,11 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("api.urls")),
+    path("", include("posts.urls", namespace="posts")),
+    path("api/", include("comments.urls", namespace="comments")),
+    path("api/", include("votes.urls", namespace="votes")),
+    path("api/", include("users.urls", namespace="users")),
+    path("api/", include("user_profile.urls", namespace="profiles")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/doc/swagger/",
