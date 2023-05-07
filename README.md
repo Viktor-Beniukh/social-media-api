@@ -41,8 +41,8 @@ Docker should be installed
 
 ## Getting access
 
-- Create user via /users/register/
-- Get access token via /users/token/
+- Create user via /api/users/register/
+- Get access token via /api/users/token/
 
 
 ## Features
@@ -64,30 +64,30 @@ Docker should be installed
 - Create new admin user. Enter container `docker exec -it <container_name> bash`, and create in from there;
 
 ### What do APIs do
-- [GET] /users/ - obtains a list of users with the possibility of filtering by username;
-- [GET] /users/<id>/ - obtains a detail of user;
-- [POST] /users/register/ - creates new users;
-- [POST] /users/token/ - creates token for user;
-- [POST] /users/logout/ - deletes token for authenticated user;
-- [GET]  /users/me/ - get my profile info;
-- [PUT]  /users/me/ - update my profile info;
+- [GET] /api/users/ - obtains a list of users with the possibility of filtering by username;
+- [GET] /api/users/<id>/ - obtains a detail of user;
+- [POST] /api/users/register/ - creates new users;
+- [POST] /api/users/token/ - creates token for user;
+- [POST] /api/users/logout/ - deletes token for authenticated user;
+- [GET]  /api/users/me/ - get my profile info;
+- [PUT]  /api/users/me/ - update my profile info;
 
-- [GET] /profiles/ - obtains a list of users profile with the possibility of filtering by owner_id;
-- [GET] /profiles/<id>/ - obtains a detail of user profile;
-- [POST] /profiles/ - creates a user profile;
-- [PUT] /profiles/ - updates a user profile;
-- [DELETE] /profiles/ - deletes a user profile;
+- [GET] /api/profiles/ - obtains a list of users profile with the possibility of filtering by owner_id;
+- [GET] /api/profiles/<id>/ - obtains a detail of user profile;
+- [POST] /api/profiles/ - creates a user profile;
+- [PUT] /api/profiles/<id>/ - updates a user profile;
+- [DELETE] /api/profiles/<id>/ - deletes a user profile;
 
 - [GET] /posts/ - obtains a list of posts with the possibility of filtering by author_id and by hashtags;
 - [GET] /posts/<id>/ - get specific post;
 - [POST] /posts/ - creates a post;
 
-- [GET] /comments/ - obtains a list of comments to posts;
-- [GET] /comments/<id>/ - obtains a detail of comment to post;
-- [POST] /comments/ - creates a comment to post;
+- [GET] /api/comments/ - obtains a list of comments to posts;
+- [GET] /api/comments/<id>/ - obtains a detail of comment to post;
+- [POST] /api/comments/ - creates a comment to post;
 
-- [GET] /votes/ - obtains a list of votes to posts;
-- [POST] /votes/ - creates a vote (like & dislike) to post;
+- [GET] /api/votes/ - obtains a list of votes to posts;
+- [POST] /api/votes/ - creates a vote (like & dislike) to post;
 
 
 ### Checking the endpoints functionality
@@ -109,7 +109,7 @@ Superuser credentials for test the functionality of this project:
 
 ## Create token for user
 
-Token page: `http://127.0.0.1:8000/users/token/`
+Token page: `http://127.0.0.1:8000/api/users/token/`
 
 Enter:
 - email address: `migrated@admin.com`;
