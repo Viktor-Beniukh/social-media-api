@@ -1,10 +1,10 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import viewsets, serializers
+from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from comments.models import Comment
-from comments.serializers import CommentSerializer
+from comments.serializers import CommentSerializer, CommentCreateSerializer
 from posts.permissions import IsAuthorOrReadOnly
 
 
@@ -27,14 +27,14 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+    def get_serializer_class(self):
+
+        if self.action == "create":
+            return CommentCreateSerializer
+
+        return super().get_serializer_class()
+
     def perform_create(self, serializer):
-        comment_instance = Comment.objects.filter(
-            post__author=self.request.user
-        )
-        if comment_instance:
-            raise serializers.ValidationError(
-                {"message": "You can't comment your posts"}
-            )
         serializer.save(author=self.request.user)
 
     @extend_schema(

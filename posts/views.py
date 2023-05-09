@@ -4,7 +4,6 @@ from django.utils import timezone
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, generics, status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.decorators import api_view
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
     IsAuthenticated
@@ -69,10 +68,16 @@ class PostViewSet(viewsets.ModelViewSet):
         if scheduled_at and scheduled_at > timezone.now():
             scheduled_at = datetime.strftime(scheduled_at, "%Y-%m-%d %H:%M:%S")
             create_post.apply_async(args=[post_data], eta=scheduled_at)
-            return Response({"message": "Post scheduled for creation."}, status=status.HTTP_200_OK)
+            return Response(
+                {"message": "Post scheduled for creation."},
+                status=status.HTTP_200_OK
+            )
         else:
             self.perform_create(serializer)
-            return Response({"message": "Post created."}, status=status.HTTP_201_CREATED)
+            return Response(
+                {"message": "Post created."},
+                status=status.HTTP_201_CREATED
+            )
 
     @extend_schema(
         parameters=[
